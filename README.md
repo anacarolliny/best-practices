@@ -5,10 +5,11 @@ Projeto criado para estudar e aplicar na prática:
 - Clean Architecture
 - Inversão de Dependência (DIP)
 - Injeção de Dependência (DI)
-- Composição vs Herança
+- Composição
+- Herança  
 - Design Patterns
 - Gateways desacoplados
-- Cache com Redis
+- Cache 
 - HTTP Client centralizado
 - Modularização arquitetural no NestJS
 
@@ -20,7 +21,7 @@ Construir uma API modular que sirva como laboratório para aplicar padrões arqu
 
 - Core desacoplado da infraestrutura
 - Dependências apontando para dentro
-- Providers intercambiáveis
+- Providers 
 - Código testável
 - Baixo acoplamento
 - Alta coesão
@@ -139,8 +140,6 @@ constructor(
 ## 5️⃣ Gateways Externos (Adapter Pattern)
 
 - AbacatePay
-- (Futuro) Stripe
-- (Futuro) Outros provedores
 
 Todos implementando a mesma interface.
 
@@ -182,7 +181,7 @@ Implementações:
 - Strategy Pattern (troca de gateway/email)
 - Factory Pattern (seleção dinâmica de provider)
 - Provider Pattern
-- Composition over Inheritance
+- Composition 
 - Singleton (via Nest providers)
 - Dependency Inversion Principle
 - Open/Closed Principle
