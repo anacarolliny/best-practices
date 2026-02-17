@@ -6,10 +6,9 @@ Projeto criado para estudar e aplicar na prática:
 - Inversão de Dependência (DIP)
 - Injeção de Dependência (DI)
 - Composição
-- Herança  
 - Design Patterns
 - Gateways desacoplados
-- Cache 
+- Cache (Application + HTTP + CDN)
 - HTTP Client centralizado
 - Modularização arquitetural no NestJS
 
@@ -21,10 +20,10 @@ Construir uma API modular que sirva como laboratório para aplicar padrões arqu
 
 - Core desacoplado da infraestrutura
 - Dependências apontando para dentro
-- Providers 
 - Código testável
 - Baixo acoplamento
 - Alta coesão
+- Evolução arquitetural progressiva
 
 ---
 
@@ -32,30 +31,22 @@ Construir uma API modular que sirva como laboratório para aplicar padrões arqu
 
 ```
 src/
- ├── core/                         → Regras puras de negócio
+ ├── core/
  │    ├── entities/
  │    ├── services/
  │
- ├── application/                  → Casos de uso
+ ├── application/
  │    ├── use-cases/
  │    ├── interfaces/
+ │    ├── dto/
  │
- ├── infrastructure/               → Implementações externas
+ ├── infrastructure/
  │    ├── http/
- │    │    ├── http-client.service.ts
- │    │    ├── http.module.ts
- │    │
  │    ├── gateways/
- │    │    ├── abacate-pay.provider.ts
- │    │
  │    ├── email/
- │    │    ├── sendgrid.provider.ts
- │    │
  │    ├── cache/
- │    │    ├── redis.provider.ts
  │
- ├── presentation/                 → Controllers
- │    ├── payments.controller.ts
+ ├── presentation/
  │
  ├── app.module.ts
 ```
@@ -76,175 +67,102 @@ Regra principal:
 
 ---
 
-# 🧩 Conceitos que serão aplicados
+# 🧩 Conceitos Aplicados
 
-## 1️⃣ Inversão de Dependência (DIP)
+## Inversão de Dependência (DIP)
 
-Use cases dependem de interfaces, nunca de implementações concretas.
+Use cases dependem de interfaces.
 
-```ts
-export interface PaymentGateway {
-  createPayment(data: any): Promise<any>;
-}
-```
+## Injeção de Dependência (DI)
 
----
+Bindings feitos via providers no módulo.
 
-## 2️⃣ Injeção de Dependência (DI)
+## Adapter Pattern
 
-Implementações concretas registradas via providers:
+Gateways externos (AbacatePay, Redis, Email).
 
-```ts
-{
-  provide: 'PaymentGateway',
-  useClass: AbacatePayProvider,
-}
-```
+## Strategy Pattern
+
+Troca dinâmica de providers (ex: Email).
+
+## Composition
+
+Regras reutilizáveis compostas dentro dos use cases.
 
 ---
 
-## 3️⃣ Composição
+# 📦 Camadas de Cache
 
-Regras reutilizáveis via composição:
+## 1️⃣ Application Cache (Redis)
 
-```ts
-export class DiscountService {
-  calculate(amount: number): number {
-    if (amount > 1000) return amount * 0.9;
-    return amount;
-  }
-}
-```
+- Interface `CacheService`
+- Implementação `RedisCacheProvider`
+- Aplicado dentro dos UseCases
 
-UseCase usa o serviço:
+## 2️⃣ HTTP Cache (em estudo)
 
-```ts
-constructor(
-  private readonly discountService: DiscountService,
-) {}
-```
+- Cache-Control
+- ETag
+- Interceptors
 
----
+## 3️⃣ CDN Cache (Akamai)
 
-## 4️⃣ HTTP Centralizado
-
-`HttpClientService` será responsável por:
-
-- Criar instâncias axios
-- Padronizar tratamento de erro
-- Configurar baseURL
-- Futuramente aplicar retry/logging/interceptors
+- s-maxage
+- stale-while-revalidate
+- Estratégias combinadas Application + Edge
 
 ---
 
-## 5️⃣ Gateways Externos (Adapter Pattern)
-
-- AbacatePay
-
-Todos implementando a mesma interface.
-
----
-
-## 6️⃣ Email Provider (Strategy Pattern)
-
-```ts
-export interface EmailProvider {
-  send(to: string, subject: string, body: string): Promise<void>;
-}
-```
-
-Implementações:
-- Sendgrid
-- SMTP
-- Mock
-
----
-
-## 7️⃣ Cache Provider
-
-```ts
-export interface CacheProvider {
-  get(key: string): Promise<any>;
-  set(key: string, value: any, ttl?: number): Promise<void>;
-}
-```
-
-Implementações:
-- Redis
-- Memory Cache
-
----
-
-# 📦 Design Patterns que serão aplicados
-
-- Adapter Pattern (Gateways)
-- Strategy Pattern (troca de gateway/email)
-- Factory Pattern (seleção dinâmica de provider)
-- Provider Pattern
-- Composition 
-- Singleton (via Nest providers)
-- Dependency Inversion Principle
-- Open/Closed Principle
-- Interface Segregation Principle
-
----
-
-# 🚀 Roadmap de Estudo
+# 🚀 Roadmap Atualizado
 
 ## 🔹 Fase 1 – Base Arquitetural
-- [ ] Estruturar camadas
-- [ ] Criar HttpClientService
-- [ ] Criar Gateway de pagamento
-- [ ] Implementar UseCase desacoplado
+- [x] Estruturar camadas
+- [x] Criar HttpClientService
+- [x] Criar Gateway de pagamento
+- [x] Implementar UseCase desacoplado
+- [x] Implementar Cache Redis com DIP
 
 ---
 
-## 🔹 Fase 2 – Email
+## 🔹 Fase 2 – Email Provider
 - [ ] Criar interface EmailProvider
-- [ ] Criar implementação concreta
+- [ ] Implementar provider real
 - [ ] Injetar via DIP
-- [ ] Testar troca de provider
+- [ ] Simular troca de provider
 
 ---
 
-## 🔹 Fase 3 – Cache
-- [ ] Criar CacheProvider
-- [ ] Implementar RedisProvider
-- [ ] Usar cache em UseCase
-- [ ] Implementar fallback memory cache
+## 🔹 Fase 3 – Cache Avançado
+- [ ] Implementar Cache-Control no Nest
+- [ ] Criar interceptor customizado
+- [ ] Implementar ETag
+- [ ] Simular comportamento CDN (Akamai)
 
 ---
 
 ## 🔹 Fase 4 – Composição e Regras de Negócio
 - [ ] Criar DiscountService
-- [ ] Usar composição em múltiplos casos de uso
-- [ ] Separar regra pura do gateway
+- [ ] Aplicar composição em múltiplos casos
+- [ ] Isolar regra pura do gateway
 
 ---
 
-## 🔹 Fase 5 – Evolução do HTTP
-- [ ] Adicionar logging centralizado
-- [ ] Adicionar retry automático
-- [ ] Adicionar timeout global
-- [ ] Implementar interceptors
+## 🔹 Fase 5 – Evolução do HTTP Client
+- [ ] Logging centralizado
+- [ ] Retry automático
+- [ ] Timeout configurável
+- [ ] Interceptors globais
+- [ ] Observabilidade
 
 ---
 
 # 🧠 Objetivo Final
 
-Ter uma API que demonstre domínio de:
+Consolidar domínio prático de:
 
-- Arquitetura limpa
-- Padrões de projeto
+- Clean Architecture
+- Design Patterns
 - DI real
-- Baixo acoplamento
-- Alta escalabilidade
-- Código testável
-- Separação clara de responsabilidades
-
----
-
-# 📚 Este projeto é um laboratório
-
-Não tem regra de negócio fixa.
-Ele existe para consolidar conhecimento arquitetural na prática.
+- Cache multi-camada
+- Estratégia de CDN
+- Código escalável e testável
