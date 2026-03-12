@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import Redis from 'ioredis';
-import { CacheService } from '../../application/interfaces/cache.interface';
+import { CacheService } from 'src/application/interfaces/cache.interface';
 
 @Injectable()
 export class RedisCacheProvider implements CacheService {
-  private readonly redis: Redis;
-
-  constructor() {
-    this.redis = new Redis({
-      host: 'localhost',
-      port: 6379,
-    });
-  }
+  constructor(private readonly redis: Redis) {}
 
   async get<T>(key: string): Promise<T | null> {
     const value = await this.redis.get(key);
-    return value ? JSON.parse(value) : null;
+
+    if (!value) return null;
+
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return null;
+    }
   }
 
-  async set(key: string, value: unknown, ttl = 60): Promise<void> {
+  async set<T>(key: string, value: T, ttl = 60): Promise<void> {
     await this.redis.set(key, JSON.stringify(value), 'EX', ttl);
   }
 
