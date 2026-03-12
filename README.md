@@ -410,3 +410,62 @@ Competências trabalhadas:
 - Observabilidade
 - CI/CD
 - Arquitetura distribuída
+
+
+---
+
+
+
+# 📚 Trilha de Aprendizado Contínuo
+
+Além dos conceitos arquiteturais já mapeados, este laboratório também evoluirá para consolidar competências práticas de engenharia de software em níveis progressivos.
+
+## 🗃 Modelagem de Dados e Persistência
+- Modelagem relacional
+- Constraints e índices
+- Soft delete
+- Auditoria básica
+- Rastreabilidade temporal (`created_at`, `updated_at`, `deleted_at`)
+
+## 🔐 Segurança e Identidade
+- Autenticação com Bearer Token
+- Hash de senha e proteção de credenciais
+- Autorização baseada em ownership de recurso
+- Proteção de rotas autenticadas
+- Estratégias de gestão de segredo e variáveis sensíveis
+
+## 🌐 Qualidade de API
+- REST Maturity Level 2
+- Modelagem consistente de recursos
+- Semântica HTTP correta
+- Validação de entrada
+- Documentação OpenAPI / Swagger
+- Experiência de consumo da API
+
+## 🧪 Qualidade de Código e Confiabilidade
+- Testes unitários
+- Código tolerante a falhas
+- Estratégias de retry, timeout e fallback
+- Prevenção de estados inválidos
+- Contratos explícitos entre camadas
+
+## 🚚 Engenharia de Entrega
+- Docker Compose para ambiente local reproduzível
+- Definição clara de variáveis de ambiente
+- Versionamento suportado do Node.js
+- Changelog orientado à evolução do projeto
+- Git tags para releases
+- Hooks de pre-commit e pre-push
+
+## ☁️ Escalabilidade e Plataforma
+- Preparação para escala horizontal
+- Identificação de gargalos arquiteturais
+- Monorepo com separação de serviços
+- API Gateway
+- Multi-tenancy
+- Deploy em cloud provider
+- Kubernetes
+- Terraform
+
+## 🎯 Resultado Esperado da Jornada
+Ao final da evolução deste laboratório, o objetivo é consolidar não apenas arquitetura de código, mas também maturidade de entrega, operação, escalabilidade e manutenção de sistemas reais.
