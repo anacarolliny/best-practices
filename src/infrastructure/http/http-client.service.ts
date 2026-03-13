@@ -17,8 +17,16 @@ export class HttpClientService {
     try {
       const response = await http.request<T>(config);
       return response.data;
-    } catch (error: any) {
-      throw new HttpException(error.response?.data, error.response?.status);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status ?? 500;
+
+        const data = (error.response?.data as unknown) ?? 'External API error';
+
+        throw new HttpException(data, status);
+      }
+
+      throw new HttpException('Unexpected error', 500);
     }
   }
 }

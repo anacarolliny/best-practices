@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { PaymentGateway } from '../../application/interfaces/payment-gateway.interface';
 import { HttpClientService } from '../http/http-client.service';
 import { CreateClientDto } from 'src/application/dto/create-client.dto';
+import { AxiosInstance } from 'axios';
 
 @Injectable()
 export class AbacatePayProvider implements PaymentGateway {
   private readonly baseUrl = 'https://api.abacatepay.com/v1';
   private readonly apiKey = process.env.ABACATE_PAY_KEY;
 
-  private readonly http;
+  private readonly http: AxiosInstance;
 
   constructor(private readonly httpClient: HttpClientService) {
     this.http = this.httpClient.create(this.baseUrl, {
